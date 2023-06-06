@@ -52,7 +52,6 @@ pytweening==1.0.4
 pytz==2023.3
 pytz-deprecation-shim==0.1.0.post0
 pywhatkit==5.3
-pywin32==303
 PyYAML==5.4.1
 requests==2.26.0
 semantic-version==2.8.5
