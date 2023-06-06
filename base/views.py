@@ -8,6 +8,13 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.models import User
+
+from django.http import JsonResponse
+from .serializers import UserSerializer
+
+from rest_framework.parsers import JSONParser
+from django.views.decorators.csrf import csrf_exempt
 
 # Imports for Reordering Feature
 from django.views import View
@@ -105,3 +112,64 @@ class TaskReorder(View):
                 self.request.user.set_task_order(positionList)
 
         return redirect(reverse_lazy('tasks'))
+
+# API creation Code 
+@csrf_exempt
+def AllUserData(request):
+    try:
+        all_users_data = User.objects.all()
+    except:
+        data = {
+            "message":"Not Found, Sorry!",
+            "status": 404
+        }
+        return JsonResponse(data)
+
+    if request.method == "GET":
+        users_data =  UserSerializer(all_users_data, many = True)
+        return JsonResponse(users_data.data, safe = False)
+    
+    elif request.method == "POST":
+        input_data = JSONParser().parse(request)
+        de_serializer = UserSerializer(data = input_data)
+
+        if de_serializer.is_valid():
+            de_serializer.save()
+            return JsonResponse(de_serializer.data, status = 201)
+        else:
+            return JsonResponse(de_serializer.errors, status = 400)
+
+@csrf_exempt
+def SingleUserData(request, id):
+    try:
+        user_data = User.objects.get(pk=id)
+    except:
+        data = {
+            "message":"Not Found, Sorry!",
+            "status": 404
+        }
+        return JsonResponse(data)
+    
+    if request.method == 'GET':
+        single_user = UserSerializer(user_data)
+        return JsonResponse(single_user.data, status = 200)
+    
+    elif request.method == 'PUT':
+
+        input_data = JSONParser().parse(request)
+        de_serializer = UserSerializer(user_data,input_data)
+
+        if de_serializer.is_valid():
+            de_serializer.save()
+            return JsonResponse(de_serializer.data, status = 205)
+        else:
+            return JsonResponse(de_serializer.errors, status = 400)
+
+    
+    elif request.method == "DELETE":
+        user_data.delete()
+        data = {
+            "message":"Successfully Delete",
+            "status": 204
+        }
+        return JsonResponse(data)
