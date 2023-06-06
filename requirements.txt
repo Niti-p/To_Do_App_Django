@@ -34,7 +34,6 @@ pathspec==0.9.0
 Pillow==9.1.0
 pipwin==0.5.2
 platformdirs==2.4.0
-PyAudio @ file:///C:/Users/RujulZalte/Downloads/PyAudio-0.2.11-cp310-cp310-win_amd64.whl
 PyAutoGUI==0.9.53
 pycparser==2.21
 PyGetWindow==0.0.9
