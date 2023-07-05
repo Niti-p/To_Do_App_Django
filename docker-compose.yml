@@ -17,7 +17,7 @@ services:
     volumes: 
       - .:/base 
       - static_volume:/home/base/templates/base
-    image: todo_app/web:latest 
+    image: rujulzalte/todo_app:latest 
     expose: 
       - 8000 
     restart: "on-failure"
